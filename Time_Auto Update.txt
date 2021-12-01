@@ -1,0 +1,38 @@
+// Run --> npm i react-autoupdate-time
+
+import React, {Component} from 'react'
+import { View, Text } from 'react-native'
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+
+class TimeContainer extends Component { 
+   constructor() {
+    super()  
+      let d = new Date()
+      this.state = {
+        Hours: d.getHours(),
+      Minutes:d.getMinutes(),
+        
+      }    
+      this.countingSecond = this.countingSecond.bind(this)
+  }  countingSecond() {
+    let d = new Date()
+    this.setState({
+      Hours: d.getHours(),
+      Minutes:d.getMinutes(),
+      
+    })
+  }  
+  componentDidMount() {
+    setInterval(this.countingSecond, 1000)
+  }  
+  render() {
+    return (
+<View>
+  <FontAwesome5 name ={'clock'}>
+        <Text> {this.state.Hours} : {this.state.Minutes}
+      </Text>
+      </FontAwesome5>
+      </View>
+    )
+  }
+}export default TimeContainer
