@@ -16,44 +16,81 @@ const Spinner = () => (
 
 const NoConnectionScreen = (props) => {
 
-
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{
         headerShown: false
       }}>
-
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-
         />
         <Stack.Screen name="Profile" component={ProfileScreen} />
       </Stack.Navigator>
     </NavigationContainer>
-
   )
-
 }
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = ({ navigation, route }) => {
+  const [connectStatus, setConnectStatus] = useState(false)
+
+  checkConnected().then(res => {
+    setConnectStatus(res)
+  })
+
+  const alertSomething = () => {
+    alert('alert something')
+  }
+
+  const Error = () => {
+    return (
+      <View style={styles.loadingWrapper}>
+        <View style={styles.container}>
+          <Image
+            source={require('../assets/nointernet_ordingg.jpg')}
+            style={{ width: 400, height: 400, }}
+            resizeMode="contain"
+          />
+          <View >
+            <Text style={{ color: 'rgba(0,0,0,0.5)', fontWeight: 'bold', fontSize: 16 }} >OOPS!</Text>
+            <Text style={{ color: 'rgba(0,0,0,0.3)', fontWeight: '100', fontSize: 14 }} >Please check your network connection.</Text>
+          </View>
+          <View style={styles.button}>
+            <Button title="Try Again" color="#464646" onPress={() => navigation.navigate('Profile')} />
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   return (
-    <View style={styles.container}>
-      <Image
-        source={require('../assets/nointernet_ordingg.jpg')}
-        style={{ width: 400, height: 400, }}
-        resizeMode="contain"
-      />
-      <View style={{ marginTop: 0 }}>
-        <Text style={{ color: 'rgba(0,0,0,0.5)', fontWeight: 'bold', fontSize: 16 }} >OOPS!</Text>
-        <Text style={{ color: 'rgba(0,0,0,0.3)', fontWeight: '100', fontSize: 14 }} >Please check your network connection.</Text>
-      </View>
-      <View style={styles.button}>
+    connectStatus ?
+      (
+        <WebView
+          bounces={false}
+          startInLoadingState={true}
+          renderLoading={Spinner}
+          source={{ uri: 'https://ordingg.com/' }}
+          showsHorizontalScrollIndicator={false}
+          renderError={() => <Error />}
+          scalesPageToFit />
 
-        <Button title="Try Again" color="#464646" onPress={() => navigation.navigate('Profile')} />
-
-      </View>
-    </View>
+      ) : (
+        <View style={styles.container}>
+          <Image
+            source={require('../assets/nointernet_ordingg.jpg')}
+            style={{ width: 400, height: 400, }}
+            resizeMode="contain"
+          />
+          <View style={{ marginTop: 0 }}>
+            <Text style={{ color: 'rgba(0,0,0,0.5)', fontWeight: 'bold', fontSize: 16 }} >OOPS!</Text>
+            <Text style={{ color: 'rgba(0,0,0,0.3)', fontWeight: '100', fontSize: 14 }} >Please check your network connection.</Text>
+          </View>
+          <View style={styles.button}>
+            <Button title="Try Again" color="#464646" onPress={() => navigation.navigate('Profile')} />
+          </View>
+        </View>
+      )
   );
 };
 
@@ -69,40 +106,36 @@ const ProfileScreen = ({ navigation, route }) => {
   }
 
   const Error = () => {
-  return (
-    <View style={styles.loadingWrapper}>
-       <View style={styles.container}>
+    return (
+      <View style={styles.loadingWrapper}>
+        <View style={styles.container}>
           <Image
             source={require('../assets/nointernet_ordingg2.jpg')}
             style={{ width: 300, height: 400, }}
             resizeMode="contain"
           />
           <View >
-            <Text style={{ color: 'rgba(0,0,0,0.5)', fontWeight: 'bold', fontSize: 16 }} >SORRY!</Text>
-            <Text style={{ color: 'rgba(0,0,0,0.3)', fontWeight: '100', fontSize: 14 }} >Your network connection is very slow. Please hit Try Again.</Text>
+            <Text style={{ color: 'rgba(0,0,0,0.5)', fontWeight: 'bold', fontSize: 16 }} >OOPS!</Text>
+            <Text style={{ color: 'rgba(0,0,0,0.3)', fontWeight: '100', fontSize: 14 }} >Please check your network connection.</Text>
           </View>
           <View style={styles.button}>
-
             <Button title="Try Again" color="#464646" onPress={() => navigation.navigate('Home')} />
-
           </View>
         </View>
-    </View>
-  );
-};
-
+      </View>
+    );
+  };
 
   return (
     connectStatus ?
       (
-
         <WebView
           bounces={false}
           startInLoadingState={true}
           renderLoading={Spinner}
           source={{ uri: 'https://ordingg.com/' }}
           showsHorizontalScrollIndicator={false}
-		      renderError={() => <Error />}
+          renderError={() => <Error />}
           scalesPageToFit />
 
       ) : (
@@ -155,7 +188,7 @@ const styles = StyleSheet.create({
     height: '100%',
     width: '100%'
   },
-  
+
   loadingWrapper: {
     backgroundColor: 'white',
     bottom: 0,
