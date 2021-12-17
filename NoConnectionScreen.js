@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, Button, ActivityIndicator, Platform, BackHandler, SafeAreaView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image, Button, ActivityIndicator } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { NavigationContainer, } from "@react-navigation/native";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -8,13 +8,11 @@ import { checkConnected } from '../functions';
 
 const Stack = createNativeStackNavigator();
 
-const Spinner = () => {
-  return (
-    <View style={styles.activityContainer}>
-      <WaveIndicator color={'#E66C2C'} />
-    </View>
-  );
-};
+const Spinner = () => (
+  <View style={styles.activityContainer}>
+    <WaveIndicator color={'#E66C2C'} />
+  </View>
+);
 
 const NoConnectionScreen = (props) => {
 
@@ -35,31 +33,14 @@ const NoConnectionScreen = (props) => {
 
 const HomeScreen = ({ navigation, route }) => {
   const [connectStatus, setConnectStatus] = useState(false)
-  const [visible, setVisible] = useState(false);
-  const webView = useRef(null);
-  const [canGoBack, setCanGoBack] = useState(false);
-
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      BackHandler.addEventListener('hardwareBackPress', HandleBackPressed);
-
-      return () => {
-        BackHandler.removeEventListener('hardwareBackPress', HandleBackPressed);
-      }
-    }
-  }, []); // INITIALIZE ONLY ONCE
-
-  const HandleBackPressed = () => {
-    if (webView.current) {
-      webView.current.goBack();
-      return true; // PREVENT DEFAULT BEHAVIOUR (EXITING THE APP)
-    }
-    return false;
-  }
 
   checkConnected().then(res => {
     setConnectStatus(res)
   })
+
+  const alertSomething = () => {
+    alert('alert something')
+  }
 
   const Error = () => {
     return (
@@ -85,26 +66,14 @@ const HomeScreen = ({ navigation, route }) => {
   return (
     connectStatus ?
       (
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            <WebView
-              style={{ flex: 1 }}
-              bounces={false}
-              startInLoadingState={true}
-              source={{ uri: 'https://ordingg.com/' }}
-              showsHorizontalScrollIndicator={false}
-              renderError={() => <Error />}
-              scalesPageToFit={true}
-              javaScriptEnabled={true} //Enable Javascript support
-              domStorageEnabled={true}  //For the Cache
-              onLoadStart={() => setVisible(true)}
-              onLoad={() => setVisible(false)}
-              ref={webView}
-              onNavigationStateChange={navState => setCanGoBack(navState.canGoBack)}
-            />
-            {visible ? <Spinner /> : null}
-          </View>
-        </SafeAreaView>
+        <WebView
+          bounces={false}
+          startInLoadingState={true}
+          renderLoading={Spinner}
+          source={{ uri: 'https://ordingg.com/' }}
+          showsHorizontalScrollIndicator={false}
+          renderError={() => <Error />}
+          scalesPageToFit />
 
       ) : (
         <View style={styles.container}>
@@ -126,32 +95,15 @@ const HomeScreen = ({ navigation, route }) => {
 };
 
 const ProfileScreen = ({ navigation, route }) => {
-  const [visible, setVisible] = useState(false);
-  const [connectStatus, setConnectStatus] = useState(false);
-  const webView = useRef(null);
-  const [canGoBack, setCanGoBack] = useState(false);
-
-  useEffect(() => {
-    if (Platform.OS === 'android') {
-      BackHandler.addEventListener('hardwareBackPress', HandleBackPressed);
-
-      return () => {
-        BackHandler.removeEventListener('hardwareBackPress', HandleBackPressed);
-      }
-    }
-  }, []); // INITIALIZE ONLY ONCE
-
-  const HandleBackPressed = () => {
-    if (webView.current) {
-      webView.current.goBack();
-      return true; // PREVENT DEFAULT BEHAVIOUR (EXITING THE APP)
-    }
-    return false;
-  }
+  const [connectStatus, setConnectStatus] = useState(false)
 
   checkConnected().then(res => {
     setConnectStatus(res)
   })
+
+  const alertSomething = () => {
+    alert('alert something')
+  }
 
   const Error = () => {
     return (
@@ -177,26 +129,14 @@ const ProfileScreen = ({ navigation, route }) => {
   return (
     connectStatus ?
       (
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            <WebView
-              style={{ flex: 1 }}
-              bounces={false}
-              startInLoadingState={true}
-              source={{ uri: 'https://ordingg.com/' }}
-              showsHorizontalScrollIndicator={false}
-              renderError={() => <Error />}
-              scalesPageToFit={true}
-              javaScriptEnabled={true} //Enable Javascript support
-              domStorageEnabled={true}  //For the Cache
-              onLoadStart={() => setVisible(true)}
-              onLoad={() => setVisible(false)}
-              ref={webView}
-              onNavigationStateChange={navState => setCanGoBack(navState.canGoBack)}
-            />
-            {visible ? <Spinner /> : null}
-          </View>
-        </SafeAreaView>
+        <WebView
+          bounces={false}
+          startInLoadingState={true}
+          renderLoading={Spinner}
+          source={{ uri: 'https://ordingg.com/' }}
+          showsHorizontalScrollIndicator={false}
+          renderError={() => <Error />}
+          scalesPageToFit />
 
       ) : (
         <View style={styles.container}>
@@ -246,8 +186,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     height: '100%',
-    width: '100%',
-    backgroundColor: 'white',
+    width: '100%'
   },
 
   loadingWrapper: {
