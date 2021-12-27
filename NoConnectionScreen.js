@@ -92,7 +92,8 @@ const HomeScreen = ({ navigation, route }) => {
         </View>
       )
   );
-};
+  
+  return (
 
 const ProfileScreen = ({ navigation, route }) => {
   const [connectStatus, setConnectStatus] = useState(false)
